@@ -274,4 +274,64 @@ class EmployeeModel extends Model
     {
         return $this->where('actif', 1)->countAllResults();
     }
+
+    /**
+     * Trouver un employé par email
+     */
+    public function findByEmail(string $email): ?array
+    {
+        return $this->where('email', $email)->first();
+    }
+
+    /**
+     * Authentifier un employé
+     */
+    public function authenticate(string $email, string $password): ?array
+    {
+        $employe = $this->findByEmail($email);
+
+        // Vérifier que l'employé existe
+        if ($employe === null) {
+            return null;
+        }
+
+        // Vérifier que l'employé est actif
+        if ($employe['actif'] != 1) {
+            return null;
+        }
+
+        // Vérifier le mot de passe
+        if (!password_verify($password, $employe['password'])) {
+            return null;
+        }
+
+        return $employe;
+    }
+
+    /**
+     * Vérifier si un utilisateur est un User (EMPLOYE)
+     */
+    public function isUser(int $id): bool
+    {
+        $employe = $this->find($id);
+        return $employe !== null && $employe['role'] === 'EMPLOYE' && $employe['actif'] == 1;
+    }
+
+    /**
+     * Vérifier si un utilisateur est RH
+     */
+    public function isRH(int $id): bool
+    {
+        $employe = $this->find($id);
+        return $employe !== null && $employe['role'] === 'RH' && $employe['actif'] == 1;
+    }
+
+    /**
+     * Vérifier si un utilisateur est ADMIN
+     */
+    public function isAdmin(int $id): bool
+    {
+        $employe = $this->find($id);
+        return $employe !== null && $employe['role'] === 'ADMIN' && $employe['actif'] == 1;
+    }
 }

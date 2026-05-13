@@ -37,6 +37,81 @@ class EmployeeController extends BaseController
     }
 
     /**
+     * Page de login des employés
+     */
+    public function login()
+    {
+        return view('employee/login');
+    }
+
+    /**
+     * Traiter la connexion de l'employé
+     */
+    public function loginProcess()
+    {
+        $method = strtoupper($this->request->getMethod());
+        
+        if ($method === 'POST') {
+            $email = trim($this->request->getPost('email') ?? '');
+            $password = trim($this->request->getPost('password') ?? '');
+
+            log_message('debug', 'Employee Login POST - Email: ' . $email);
+
+            if (empty($email) || empty($password)) {
+                return view('employee/login', [
+                    'error' => 'Email et mot de passe sont obligatoires.',
+                ]);
+            }
+
+            $employe = $this->employeeModel->authenticate($email, $password);
+
+            if ($employe) {
+                // Connexion réussie
+                session()->set([
+                    'id' => $employe['id'],
+                    'email' => $employe['email'],
+                    'nom' => $employe['nom'],
+                    'prenom' => $employe['prenom'],
+                    'role' => $employe['role'],
+                    'logged_in' => true,
+                ]);
+
+                return view('employee/success', [
+                    'employe' => $employe,
+                ]);
+            } else {
+                return view('employee/login', [
+                    'error' => 'Email ou mot de passe incorrect.',
+                ]);
+            }
+        }
+
+        return view('employee/login');
+    }
+
+    /**
+     * Déconnexion de l'employé
+     */
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/employee/login');
+    }
+
+    /**
+     * Vérifier si un utilisateur est un User (EMPLOYE)
+     */
+    public function isUser(int $id)
+    {
+        $isUser = $this->employeeModel->isUser($id);
+        return $this->response->setJSON([
+            'success' => $isUser,
+            'message' => $isUser ? 'L\'utilisateur est un employé actif' : 'L\'utilisateur n\'existe pas ou n\'est pas actif',
+            'is_user' => $isUser,
+        ]);
+    }
+
+    /**
      * Affiche le formulaire de création d'un employé
      */
     public function create()
