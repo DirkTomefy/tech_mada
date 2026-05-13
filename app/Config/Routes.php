@@ -4,6 +4,10 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 
+// Admin dashboard
+$routes->get('admin', 'AdminController::index');
+$routes->post('admin/solde/save', 'AdminController::saveSolde');
+
 // Employees — routes admin
 $routes->get('admin/employes',                    'EmployeeController::index');
 $routes->get('admin/employes/create',             'EmployeeController::create');

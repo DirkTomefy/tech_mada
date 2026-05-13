@@ -21,9 +21,10 @@
       <div class="sidebar-brand-name">TechMada RH<span>Administration</span></div>
     </div>
     <ul class="sidebar-nav" style="margin-top:1rem">
-      <li><a href="#page-dashboard-admin"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
-      <li><a href="#page-liste-rh"><i class="bi bi-inbox"></i> Toutes les demandes</a></li>
-      <li><a href="#page-admin-employes" class="active"><i class="bi bi-people"></i> Employés</a></li>
+      <li><a href="<?= site_url('admin') ?>"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+      <li><a href="<?= site_url('admin') ?>#solde"><i class="bi bi-wallet2"></i> Solde employé</a></li>
+      <li><a href="<?= site_url('admin') ?>#demandes"><i class="bi bi-inbox"></i> Demandes</a></li>
+      <li><a href="<?= site_url('admin/employes') ?>" class="active"><i class="bi bi-people"></i> Employés</a></li>
       <li><a href="<?= site_url('admin/departements') ?>"><i class="bi bi-building"></i> Départements</a></li>
     </ul>
     <div class="sidebar-user">
@@ -38,10 +39,10 @@
     <div class="topbar">
       <div>
         <div class="topbar-title">Gestion des employés</div>
-        <div class="topbar-breadcrumb"><a href="#page-dashboard-admin">Admin</a> <i class="bi bi-chevron-right" style="font-size:.6rem"></i> Employés</div>
+        <div class="topbar-breadcrumb"><a href="<?= site_url('admin') ?>">Admin</a> <i class="bi bi-chevron-right" style="font-size:.6rem"></i> Employés</div>
       </div>
       <div class="topbar-actions">
-        <a href="#" class="btn-forest" style="padding:7px 14px;font-size:.82rem"><i class="bi bi-person-plus"></i> Ajouter</a>
+        <a href="<?= site_url('employes/create') ?>" class="btn-forest" style="padding:7px 14px;font-size:.82rem"><i class="bi bi-person-plus"></i> Ajouter</a>
       </div>
     </div>
 

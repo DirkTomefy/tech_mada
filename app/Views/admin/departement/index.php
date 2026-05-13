@@ -19,7 +19,9 @@
       <div class="sidebar-brand-name">TechMada RH<span>Administration</span></div>
     </div>
     <ul class="sidebar-nav" style="margin-top:1rem">
-      <li><a href="#"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+      <li><a href="<?= site_url('admin') ?>"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+      <li><a href="<?= site_url('admin') ?>#solde"><i class="bi bi-wallet2"></i> Solde employé</a></li>
+      <li><a href="<?= site_url('admin') ?>#demandes"><i class="bi bi-inbox"></i> Demandes</a></li>
       <li><a href="<?= site_url('admin/employes') ?>"><i class="bi bi-people"></i> Employés</a></li>
       <li><a href="<?= site_url('admin/departements') ?>" class="active"><i class="bi bi-building"></i> Départements</a></li>
     </ul>
@@ -29,7 +31,7 @@
     <div class="topbar">
       <div>
         <div class="topbar-title">Gestion des départements</div>
-        <div class="topbar-breadcrumb"><a href="#">Admin</a> <i class="bi bi-chevron-right" style="font-size:.6rem"></i> Départements</div>
+        <div class="topbar-breadcrumb"><a href="<?= site_url('admin') ?>">Admin</a> <i class="bi bi-chevron-right" style="font-size:.6rem"></i> Départements</div>
       </div>
     </div>
 

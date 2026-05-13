@@ -17,10 +17,11 @@
         </div>
         <div class="sidebar-section">Gestion</div>
         <ul class="sidebar-nav">
-            <li><a href="/admin"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
-            <li><a href="/admin/employes" class="active"><i class="bi bi-people"></i> Employés</a></li>
-            <li><a href="#"><i class="bi bi-building"></i> Départements</a></li>
-            <li><a href="#"><i class="bi bi-tags"></i> Types de congé</a></li>
+            <li><a href="<?= site_url('admin') ?>"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
+            <li><a href="<?= site_url('admin') ?>#solde"><i class="bi bi-wallet2"></i> Solde employé</a></li>
+            <li><a href="<?= site_url('admin') ?>#demandes"><i class="bi bi-inbox"></i> Demandes</a></li>
+            <li><a href="<?= site_url('admin/employes') ?>" class="active"><i class="bi bi-people"></i> Employés</a></li>
+            <li><a href="<?= site_url('admin/departements') ?>"><i class="bi bi-building"></i> Départements</a></li>
         </ul>
     </aside>
 
@@ -29,9 +30,9 @@
             <div>
                 <div class="topbar-title">Modifier l'employé</div>
                 <div class="topbar-breadcrumb">
-                    <a href="/admin">Admin</a>
+                    <a href="<?= site_url('admin') ?>">Admin</a>
                     <i class="bi bi-chevron-right" style="font-size:.6rem"></i>
-                    <a href="/admin/employes">Employés</a>
+                    <a href="<?= site_url('admin/employes') ?>">Employés</a>
                     <i class="bi bi-chevron-right" style="font-size:.6rem"></i> Modifier
                 </div>
             </div>
@@ -128,7 +129,7 @@
 
                     <div class="form-actions">
                         <button type="submit" class="btn-forest"><i class="bi bi-check"></i> Enregistrer les modifications</button>
-                        <a href="/admin/employes" class="btn-secondary"><i class="bi bi-x"></i> Annuler</a>
+                        <a href="<?= site_url('admin/employes') ?>" class="btn-secondary"><i class="bi bi-x"></i> Annuler</a>
                     </div>
                 </div>
             </form>
