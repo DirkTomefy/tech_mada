@@ -24,6 +24,11 @@ $routes->get('admin/departements/edit/(:num)',     'DepartementController::edit/
 $routes->post('admin/departements/update/(:num)',  'DepartementController::update/$1');
 $routes->get('admin/departements/delete/(:num)',   'DepartementController::delete/$1');
 
+// RH validation des congés
+$routes->get('rh', 'RhController::index');
+$routes->post('rh/conges/approve/(:num)', 'RhController::approve/$1');
+$routes->post('rh/conges/refuse/(:num)', 'RhController::refuse/$1');
+
 $routes->match(['get', 'post'], 'employee/login',           'EmployeeController::login');
 $routes->match(['get', 'post'], 'employee/loginProcess',    'EmployeeController::loginProcess');
 $routes->get('employee/logout',          'EmployeeController::logout');
