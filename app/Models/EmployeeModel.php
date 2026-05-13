@@ -295,11 +295,7 @@ class EmployeeModel extends Model
             return null;
         }
 
-        // Vérifier que l'employé est actif
-        if ($employe['actif'] != 1) {
-            return null;
-        }
-
+        
         // Vérifier le mot de passe
         if (!password_verify($password, $employe['password'])) {
             return null;

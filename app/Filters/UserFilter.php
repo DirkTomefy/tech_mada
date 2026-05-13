@@ -26,7 +26,7 @@ class UserFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (!session()->get('user_id')) {
-            return redirect()->to('login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
+            return redirect()->to('/employee/login')->with('error', 'Vous devez être connecté pour accéder à cette page.');
         }
 
         return null;

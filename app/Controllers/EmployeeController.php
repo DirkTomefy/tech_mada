@@ -69,10 +69,13 @@ class EmployeeController extends BaseController
                 // Connexion réussie
                 session()->set([
                     'id' => $employe['id'],
+                    'user_id' => $employe['id'],
                     'email' => $employe['email'],
                     'nom' => $employe['nom'],
                     'prenom' => $employe['prenom'],
                     'role' => $employe['role'],
+                    'is_admin' => $employe['role'] === 'ADMIN',
+                    'is_rh' => $employe['role'] === 'RH',
                     'logged_in' => true,
                 ]);
 
@@ -84,7 +87,7 @@ class EmployeeController extends BaseController
             }
         }
 
-        return view('employee/login');
+        // return view('employee/login');
     }
 
     /**
