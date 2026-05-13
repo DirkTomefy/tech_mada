@@ -7,9 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-/* (CSS identical to template; omitted for brevity) */
-</style>
+<link rel="stylesheet" href="<?= base_url('/assets/css/template.css') ?>">
 </head>
 <body>
 
@@ -104,30 +102,22 @@
       <div class="data-card">
         <div class="data-card-head">
           <h3>Tous les employés</h3>
-          <div style="display:flex;gap:6px">
+          <form method="GET" action="<?= site_url('admin/employes') ?>" style="display:flex;gap:6px">
             <input type="text" class="f-input" placeholder="Rechercher..." style="width:200px;padding:6px 10px;font-size:.8rem"/>
-            <select class="f-select" style="font-size:.8rem;padding:6px 10px;width:auto">
-              <option>Tous les depts</option>
-              <option>IT</option>
-              <option>Finance</option>
+            <select name="departement_id" class="f-select" style="font-size:.8rem;padding:6px 10px;width:auto" onchange="this.form.submit()">
+              <option value="">Tous les depts</option>
+              <option value="1" <?= (int) ($selectedDepartementId ?? 0) === 1 ? 'selected' : '' ?>>IT</option>
+              <option value="2" <?= (int) ($selectedDepartementId ?? 0) === 2 ? 'selected' : '' ?>>Finance</option>
+              <option value="3" <?= (int) ($selectedDepartementId ?? 0) === 3 ? 'selected' : '' ?>>Marketing</option>
+              <option value="4" <?= (int) ($selectedDepartementId ?? 0) === 4 ? 'selected' : '' ?>>RH</option>
             </select>
-          </div>
+          </form>
         </div>
         <table class="tbl">
           <thead>
             <tr><th>Employé</th><th>Département</th><th>Rôle</th><th>Embauche</th><th>Statut</th><th>Solde annuel</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            <?php
-            $employees = [];
-            try {
-                $model = new \App\Models\EmployeeModel();
-                $employees = $model->getAll();
-            } catch (\Exception $e) {
-                log_message('error', 'Vue admin/employee/index: erreur récupération employés - ' . $e->getMessage());
-            }
-            ?>
-
             <?php if (!empty($employees)): ?>
                 <?php foreach ($employees as $emp): ?>
                     <tr>

@@ -22,6 +22,7 @@ class EmployeeModel extends Model
         'actif',
     ];
     protected $useTimestamps = false;
+    protected $businessError;
 
     protected $validationRules = [
         'nom' => 'required|string|max_length[100]',
@@ -68,6 +69,20 @@ class EmployeeModel extends Model
     }
 
     /**
+     * Récupère la liste admin (actifs + inactifs) avec filtre optionnel par département
+     */
+    public function getAllForAdmin(?int $departementId = null)
+    {
+        $builder = $this->orderBy('nom', 'ASC');
+
+        if ($departementId !== null) {
+            $builder->where('departement_id', $departementId);
+        }
+
+        return $builder->findAll();
+    }
+
+    /**
      * Récupère un employé par ID
      */
     public function getById($id)
@@ -109,6 +124,42 @@ class EmployeeModel extends Model
      */
     public function updateEmployee($id, $data)
     {
+        $this->businessError = null;
+
+        $employee = $this->getById($id);
+        if (!$employee) {
+            $this->businessError = 'Employé non trouvé';
+            return false;
+        }
+
+        if (isset($employee['actif']) && (int) $employee['actif'] === 0) {
+            $this->businessError = 'Impossible de modifier un employé inactif';
+            return false;
+        }
+
+        $email = $data['email'] ?? null;
+        if ($email !== null) {
+            $existing = $this->where('email', $email)
+                ->where('id !=', $id)
+                ->first();
+
+            if ($existing) {
+                $this->businessError = 'Cet email existe déjà';
+                return false;
+            }
+        }
+
+        $rules = $this->validationRules;
+        $rules['password'] = 'permit_empty|string|min_length[6]';
+
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules, $this->validationMessages);
+
+        if (!$validation->run($data)) {
+            $this->errors = $validation->getErrors();
+            return false;
+        }
+
         // Hash le mot de passe s'il est modifié
         if (isset($data['password']) && !empty($data['password'])) {
             $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -124,7 +175,36 @@ class EmployeeModel extends Model
      */
     public function deactivateEmployee($id)
     {
+        $this->businessError = null;
+
+        $employee = $this->getById($id);
+        if (!$employee) {
+            $this->businessError = 'Employé non trouvé';
+            return false;
+        }
+
+        if (isset($employee['actif']) && (int) $employee['actif'] === 0) {
+            $this->businessError = 'Cet employé est déjà inactif';
+            return false;
+        }
+
         return $this->update($id, ['actif' => 0]);
+    }
+
+    /**
+     * Supprime logiquement un employé
+     */
+    public function deleteEmployee($id)
+    {
+        return $this->deactivateEmployee($id);
+    }
+
+    /**
+     * Retourne la dernière erreur métier
+     */
+    public function getBusinessError()
+    {
+        return $this->businessError;
     }
 
     /**

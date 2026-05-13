@@ -19,10 +19,18 @@ class EmployeeController extends BaseController
      */
     public function index()
     {
+        $departementInput = $this->request->getGet('departement_id');
+        $departementId = (is_numeric($departementInput) && (int) $departementInput > 0)
+            ? (int) $departementInput
+            : null;
+
+        $employees = $this->employeeModel->getAllForAdmin($departementId);
+
         $data = [
             'title' => 'Gestion des Employés',
-            'employees' => $this->employeeModel->getAll(),
-            'totalEmployees' => $this->employeeModel->countActive(),
+            'employees' => $employees,
+            'totalEmployees' => count($employees),
+            'selectedDepartementId' => $departementId,
         ];
 
         return view('admin/employee/index', $data);
@@ -42,9 +50,6 @@ class EmployeeController extends BaseController
      */
     public function store()
     {
-        $validation = \Config\Services::validation();
-        $validation->setRules($this->employeeModel->getValidationRules());
-
         $input = $this->request->getPost();
 
         // Valider les données avec les règles du modèle
@@ -62,7 +67,7 @@ class EmployeeController extends BaseController
         // Tenter d'insérer l'employé
         if ($this->employeeModel->createEmployee($input)) {
             session()->setFlashdata('success', 'Employé créé avec succès');
-            return redirect()->to('/employes/create');
+            return redirect()->to('/admin/employes');
         }
 
         // Récupérer l'erreur de la base de données
@@ -119,26 +124,20 @@ class EmployeeController extends BaseController
      */
     public function update($id)
     {
-        $employee = $this->employeeModel->getById($id);
-
-        if (!$employee) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Employé non trouvé");
-        }
-
-        $validation = \Config\Services::validation();
-        $validation->setRules($this->employeeModel->getValidationRules());
-
         $input = $this->request->getPost();
-
-        if (!$validation->run($input)) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
-        }
 
         if ($this->employeeModel->updateEmployee($id, $input)) {
             return redirect()->to('/admin/employes')->with('success', 'Employé modifié avec succès');
         }
 
-        return redirect()->back()->withInput()->with('error', 'Erreur lors de la modification de l\'employé');
+        $errors = $this->employeeModel->errors();
+        $businessError = $this->employeeModel->getBusinessError();
+
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->with('errors', $errors);
+        }
+
+        return redirect()->back()->withInput()->with('error', $businessError ?? 'Erreur lors de la modification de l\'employé');
     }
 
     /**
@@ -146,17 +145,12 @@ class EmployeeController extends BaseController
      */
     public function delete($id)
     {
-        $employee = $this->employeeModel->getById($id);
-
-        if (!$employee) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Employé non trouvé");
-        }
-
-        if ($this->employeeModel->deactivateEmployee($id)) {
+        if ($this->employeeModel->deleteEmployee($id)) {
             return redirect()->to('/admin/employes')->with('success', 'Employé supprimé avec succès');
         }
 
-        return redirect()->back()->with('error', 'Erreur lors de la suppression de l\'employé');
+        $businessError = $this->employeeModel->getBusinessError();
+        return redirect()->back()->with('error', $businessError ?? 'Erreur lors de la suppression de l\'employé');
     }
 
     /**
