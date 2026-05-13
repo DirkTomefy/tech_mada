@@ -58,7 +58,7 @@ VALUES (
         'Michel',
         'michel.andry@test.com',
         '1234',
-        'MANAGER',
+        'ADMIN',
         1,
         '2022-03-01',
         1
