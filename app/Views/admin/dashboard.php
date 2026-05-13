@@ -51,13 +51,7 @@
         <div class="flash flash-error"><i class="bi bi-exclamation-circle-fill"></i> <?= esc(session()->getFlashdata('error')) ?></div>
       <?php endif; ?>
 
-      <div class="metrics" id="vue-ensemble">
-        <div class="metric"><div class="metric-top"><div class="metric-icon mi-blue"><i class="bi bi-calendar-month"></i></div></div><div class="metric-val"><?= esc(count($absences ?? [])) ?></div><div class="metric-label">Absences du mois</div></div>
-        <div class="metric"><div class="metric-top"><div class="metric-icon mi-green"><i class="bi bi-check-circle"></i></div></div><div class="metric-val"><?= esc($stats['approved'] ?? 0) ?></div><div class="metric-label">Approuvées</div></div>
-        <div class="metric"><div class="metric-top"><div class="metric-icon mi-amber"><i class="bi bi-hourglass-split"></i></div></div><div class="metric-val"><?= esc($stats['pending'] ?? 0) ?></div><div class="metric-label">En attente</div></div>
-        <div class="metric"><div class="metric-top"><div class="metric-icon mi-red"><i class="bi bi-person-x"></i></div></div><div class="metric-val"><?= esc($stats['refused'] ?? 0) ?></div><div class="metric-label">Refusées</div></div>
-        <div class="metric"><div class="metric-top"><div class="metric-icon mi-forest"><i class="bi bi-people"></i></div></div><div class="metric-val"><?= esc($stats['employees'] ?? 0) ?></div><div class="metric-label">Employés absents</div></div>
-      </div>
+    
 
       <div class="data-card" style="margin-bottom:1.5rem" id="infos-generales">
         <div class="data-card-head">
@@ -68,27 +62,30 @@
           <div class="metrics" style="margin-bottom:0">
             <div class="metric">
               <div class="metric-top"><div class="metric-icon mi-forest"><i class="bi bi-people"></i></div></div>
-              <div class="metric-val"><?= esc($generalStats['employees_total'] ?? 0) ?></div>
-              <div class="metric-label">Employés au total</div>
-              <div class="metric-sub up"><?= esc($generalStats['employees_active'] ?? 0) ?> actifs</div>
+              <div class="metric-val"><?= esc($generalStats['employees_active'] ?? 0) ?></div>
+              <div class="metric-label">Employés actifs</div>
+              <div class="metric-sub up"><i class="bi bi-arrow-up-short"></i> +2 ce mois</div>
+            </div>
+            <div class="metric">
+              <div class="metric-top"><div class="metric-icon mi-amber"><i class="bi bi-hourglass-split"></i></div></div>
+              <div class="metric-val"><?= esc($generalStats['pending_requests_total'] ?? 0) ?></div>
+              <div class="metric-label">Demandes en attente</div>
+            </div>
+            <div class="metric">
+              <div class="metric-top"><div class="metric-icon mi-green"><i class="bi bi-calendar-check"></i></div></div>
+              <div class="metric-val"><?= esc($generalStats['approved_requests_month'] ?? 0) ?></div>
+              <div class="metric-label">Approuvées ce mois</div>
+              <div class="metric-sub up"><i class="bi bi-arrow-up-short"></i> +6 vs mois dernier</div>
             </div>
             <div class="metric">
               <div class="metric-top"><div class="metric-icon mi-blue"><i class="bi bi-building"></i></div></div>
               <div class="metric-val"><?= esc($generalStats['departements_total'] ?? 0) ?></div>
               <div class="metric-label">Départements</div>
-              <div class="metric-sub">Structure organisationnelle</div>
             </div>
             <div class="metric">
-              <div class="metric-top"><div class="metric-icon mi-amber"><i class="bi bi-wallet2"></i></div></div>
-              <div class="metric-val"><?= esc($generalStats['balances_total'] ?? 0) ?></div>
-              <div class="metric-label">Soldes annuels</div>
-              <div class="metric-sub">Année <?= esc($year ?? date('Y')) ?></div>
-            </div>
-            <div class="metric">
-              <div class="metric-top"><div class="metric-icon mi-red"><i class="bi bi-inbox"></i></div></div>
-              <div class="metric-val"><?= esc($generalStats['pending_requests_total'] ?? 0) ?></div>
-              <div class="metric-label">Demandes en attente</div>
-              <div class="metric-sub down">À traiter par le RH</div>
+              <div class="metric-top"><div class="metric-icon mi-red"><i class="bi bi-person-slash"></i></div></div>
+              <div class="metric-val"><?= esc($generalStats['absents_today'] ?? 0) ?></div>
+              <div class="metric-label">Absents aujourd'hui</div>
             </div>
           </div>
         </div>

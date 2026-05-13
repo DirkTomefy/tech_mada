@@ -31,14 +31,23 @@ class AdminController extends BaseController
         $employees = $this->employeeModel->getAllForAdmin();
         $departements = $this->departementModel->getAll();
         $balancesByYear = $this->soldeModel->getBalancesByYear($year);
-        $stats = $this->congesModel->getDashboardStatsCurrentMonth();
+        
+        // Récupérer les statistiques du mois courant depuis les models
+        $dashboardStats = $this->congesModel->getDashboardStatsCurrentMonth();
+        $countByStatus = $this->congesModel->countByStatus();
+        $absences = $this->congesModel->getAbsencesCurrentMonth();
+        $absentsToday = $this->congesModel->countAbsentsToday();
+        $requests = $this->congesModel->getRequestsWithEmployees(20);
+        $employeesActive = $this->employeeModel->countActive();
 
         $data = [
             'title' => 'Vue d\'ensemble admin',
             'currentMonthLabel' => date('m/Y'),
-            'stats' => $stats,
-            'absences' => $this->congesModel->getAbsencesCurrentMonth(),
-            'requests' => $this->congesModel->getRequestsWithEmployees(20),
+            'stats' => $countByStatus,
+            'dashboardStats' => $dashboardStats,
+            'absences' => $absences,
+            'absentsToday' => $absentsToday,
+            'requests' => $requests,
             'employees' => $employees,
             'departements' => $departements,
             'balancesByYear' => $balancesByYear,
@@ -46,10 +55,12 @@ class AdminController extends BaseController
             'typesConge' => $this->db->table('types_conge')->orderBy('libelle', 'ASC')->get()->getResultArray(),
             'generalStats' => [
                 'employees_total' => count($employees),
-                'employees_active' => $this->employeeModel->countActive(),
+                'employees_active' => $employeesActive,
+                'absents_today' => $absentsToday,
                 'departements_total' => count($departements),
                 'balances_total' => count($balancesByYear),
-                'pending_requests_total' => (int) ($stats['pending'] ?? 0),
+                'pending_requests_total' => (int) ($countByStatus['en_attente'] ?? 0),
+                'approved_requests_month' => (int) ($dashboardStats['approved'] ?? 0),
             ],
         ];
 

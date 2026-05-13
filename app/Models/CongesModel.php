@@ -53,6 +53,20 @@ class CongesModel extends Model
         return count($this->getAbsencesCurrentMonth());
     }
 
+    /**
+     * Compte les absents d'aujourd'hui (congés approuvés)
+     */
+    public function countAbsentsToday(): int
+    {
+        $today = date('Y-m-d');
+        
+        return $this->db->table($this->table)
+            ->where('statut', 'approuve')
+            ->where('date_debut <=', $today)
+            ->where('date_fin >=', $today)
+            ->countAllResults();
+    }
+
     public function getDashboardStatsCurrentMonth(): array
     {
         $start = date('Y-m-01');
@@ -89,5 +103,38 @@ class CongesModel extends Model
             ->orderBy('conges.created_at', 'DESC')
             ->limit($limit)
             ->findAll();
+    }
+
+    /**
+     * Compte les demandes par statut (optionnellement par département)
+     */
+    public function countByStatus(?int $departementId = null): array
+    {
+        $query = $this->db->table($this->table)
+            ->join('employes e', 'e.id = ' . $this->table . '.employe_id', 'left');
+
+        if ($departementId !== null) {
+            $query->where('e.departement_id', $departementId);
+        }
+
+        $result = $query->select('statut, COUNT(*) AS count', false)
+            ->groupBy('statut')
+            ->get()
+            ->getResultArray();
+
+        // Initialiser avec les valeurs par défaut
+        $counts = [
+            'en_attente' => 0,
+            'approuve' => 0,
+            'refuse' => 0,
+            'annule' => 0,
+        ];
+
+        // Remplir avec les résultats de la requête
+        foreach ($result as $row) {
+            $counts[$row['statut']] = (int) $row['count'];
+        }
+
+        return $counts;
     }
 }
