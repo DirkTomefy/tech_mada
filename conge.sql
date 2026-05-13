@@ -24,18 +24,27 @@ CREATE TABLE types_conge (
 -- =========================
 CREATE TABLE employes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+
     nom TEXT NOT NULL,
     prenom TEXT NOT NULL,
+
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    role TEXT NOT NULL,
+
+    role TEXT NOT NULL
+        CHECK(role IN ('RH', 'EMPLOYE', 'ADMIN')),
+
     departement_id INTEGER,
+
     date_embauche DATE,
+
     actif INTEGER NOT NULL DEFAULT 1,
     -- 0 = inactif
     -- 1 = actif
-    FOREIGN KEY (departement_id) REFERENCES departements(id) ON DELETE
-    SET NULL
+
+    FOREIGN KEY (departement_id)
+        REFERENCES departements(id)
+        ON DELETE SET NULL
 );
 -- =========================
 -- TABLE : soldes
