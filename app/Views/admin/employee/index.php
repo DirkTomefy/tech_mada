@@ -24,6 +24,7 @@
       <li><a href="#page-dashboard-admin"><i class="bi bi-speedometer2"></i> Vue d'ensemble</a></li>
       <li><a href="#page-liste-rh"><i class="bi bi-inbox"></i> Toutes les demandes</a></li>
       <li><a href="#page-admin-employes" class="active"><i class="bi bi-people"></i> Employés</a></li>
+      <li><a href="<?= site_url('admin/departements') ?>"><i class="bi bi-building"></i> Départements</a></li>
     </ul>
     <div class="sidebar-user">
       <div class="s-user-row">
