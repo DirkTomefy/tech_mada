@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use Exception;
 
 class CongeModel extends Model
 {
     protected $table = 'conges';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
     protected $returnType = 'array';
-    protected $useSoftDeletes = false;
+    protected $useTimestamps = false;
+
     protected $allowedFields = [
         'employe_id',
         'type_conge_id',
@@ -20,23 +21,72 @@ class CongeModel extends Model
         'motif',
         'statut',
         'commentaire_rh',
-        'traite_par'
+        'created_at',
+        'traite_par',
     ];
 
-    protected $useTimestamps = false;
+    protected $lastError = [];
 
-    /**
-     * Créer une demande de congé
-     */
-    public function creerDemande($data)
+    public function __construct()
     {
-        return $this->insert($data);
+        parent::__construct();
     }
 
     /**
-     * Récupérer toutes les demandes d'un employé
+     * Valide que les dates sont au bon format et que date_fin >= date_debut
      */
-    public function getByEmploye($employe_id)
+    public static function validateDates(?string $debut, ?string $fin): bool
+    {
+        if (empty($debut) || empty($fin)) {
+            return false;
+        }
+
+        $d1 = date_create_from_format('Y-m-d', $debut);
+        $d2 = date_create_from_format('Y-m-d', $fin);
+
+        if (!$d1 || !$d2) {
+            return false;
+        }
+
+        return $d2 >= $d1;
+    }
+
+    /**
+     * Calcule le nombre de jours calendaires inclusifs entre deux dates
+     */
+    public static function calculerJours(string $debut, string $fin): int
+    {
+        $d1 = new \DateTime($debut);
+        $d2 = new \DateTime($fin);
+
+        // inclusif : ajouter 1 jour
+        $interval = $d1->diff($d2);
+        return (int) $interval->days + 1;
+    }
+
+    /**
+     * Wrapper d'insertion compatible avec CodeIgniter\Model::insert
+     */
+    public function insert($data = null, bool $returnID = true)
+    {
+        try {
+            $result = parent::insert($data, $returnID);
+
+            if ($result === false) {
+                $this->lastError = $this->db->error();
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            $this->lastError = ['message' => $e->getMessage()];
+            return false;
+        }
+    }
+
+    /**
+     * Récupère les demandes d'un employé
+     */
+    public function getByEmploye(int $employe_id): array
     {
         return $this->where('employe_id', $employe_id)
             ->orderBy('created_at', 'DESC')
@@ -44,9 +94,27 @@ class CongeModel extends Model
     }
 
     /**
-     * Récupérer les demandes en attente
+     * Met à jour le statut d'une demande
      */
-    public function getEnAttente()
+    public function updateStatut(int $conge_id, string $statut, ?string $commentaire = null): bool
+    {
+        $data = ['statut' => $statut];
+        if ($commentaire !== null) {
+            $data['commentaire_rh'] = $commentaire;
+        }
+
+        try {
+            return (bool) $this->where('id', $conge_id)->set($data)->update();
+        } catch (Exception $e) {
+            $this->lastError = ['message' => $e->getMessage()];
+            return false;
+        }
+    }
+
+    /**
+     * Récupère les demandes en attente
+     */
+    public function getEnAttente(): array
     {
         return $this->where('statut', 'en_attente')
             ->orderBy('created_at', 'DESC')
@@ -54,62 +122,15 @@ class CongeModel extends Model
     }
 
     /**
-     * Récupérer une demande avec les détails (employé, type de congé)
+     * Retourne les dernières erreurs pour debug
      */
-    public function getDetailedConge($conge_id)
+    public function errors(bool $forceDB = false)
     {
-        return $this->select('conges.*, employes.prenom, employes.nom, employes.email, types_conge.libelle as type_libelle')
-            ->join('employes', 'employes.id = conges.employe_id')
-            ->join('types_conge', 'types_conge.id = conges.type_conge_id')
-            ->where('conges.id', $conge_id)
-            ->first();
-    }
-
-    /**
-     * Mettre à jour le statut d'une demande
-     */
-    public function updateStatut($conge_id, $statut, $commentaire = null)
-    {
-        $data = [
-            'statut' => $statut,
-            'traite_par' => session('id') // Récupère l'ID de l'utilisateur en session
-        ];
-
-        if ($commentaire !== null) {
-            $data['commentaire_rh'] = $commentaire;
+        $parentErrors = parent::errors($forceDB);
+        if (!empty($parentErrors)) {
+            return $parentErrors;
         }
 
-        return $this->update($conge_id, $data);
-    }
-
-    /**
-     * Calculer le nombre de jours entre deux dates (jours ouvrables)
-     */
-    public static function calculerJours($date_debut, $date_fin)
-    {
-        $debut = new \DateTime($date_debut);
-        $fin   = new \DateTime($date_fin);
-
-        // +1 pour inclure le dernier jour
-        return $debut->diff($fin)->days + 1;
-    }
-
-    public static function validateDates($date_debut, $date_fin)
-    {
-        $debut = new \DateTime($date_debut);
-        $fin   = new \DateTime($date_fin);
-
-        // date fin >= date début
-        if ($fin < $debut) {
-            return false;
-        }
-
-        // pas dans le passé
-        $today = new \DateTime('today');
-        if ($debut < $today) {
-            return false;
-        }
-
-        return true;
+        return (array) $this->lastError;
     }
 }

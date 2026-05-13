@@ -106,10 +106,81 @@
     </style>
 </head>
 <body>
+<div class="app-wrap">
 
-<div style="background: var(--cream); min-height: 100vh;">
+<div style="background: var(--cream)">
+      <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <div class="sidebar-logo-icon">
+                <i class="bi bi-briefcase"></i>
+            </div>
+
+            <div class="sidebar-brand-name">
+                TechMada RH
+                <span>Espace employé</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav" style="margin-top:1rem">
+
+            <li>
+                <a href="<?= base_url('employee/dashboard') ?>">
+                    <i class="bi bi-grid-1x2"></i>
+                    Tableau de bord
+                </a>
+            </li>
+
+            <li>
+                <a href="<?= base_url('employee/conges/nouveau') ?>" class="active">
+                    <i class="bi bi-plus-circle"></i>
+                    Nouvelle demande
+                </a>
+            </li>
+
+            <li>
+                <a href="<?= base_url('employee/conges/mes-demandes') ?>">
+                    <i class="bi bi-calendar3"></i>
+                    Mes demandes
+                </a>
+            </li>
+
+            <li>
+                <a href="<?= base_url('employee/dashboard#profil') ?>">
+                    <i class="bi bi-person"></i>
+                    Mon profil
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-user">
+
+            <div class="s-user-row">
+
+                <div class="avatar av-green">
+                    <?= strtoupper(substr(session('user_nom') ?? 'U', 0, 1)) ?>
+                </div>
+
+                <div>
+                    <div class="user-name">
+                        <?= esc(session('user_nom_complet') ?? 'Employé') ?>
+                    </div>
+
+                    <div class="user-role">
+                        Employé
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+</div>
     <div class="dashboard-container">
         <!-- Bienvenue -->
+         
         <div class="welcome-card">
             <h1 class="welcome-title">
                 <i class="bi bi-hand-thumbs-up"></i> Bienvenue, <?= htmlspecialchars(session('prenom')) ?>!

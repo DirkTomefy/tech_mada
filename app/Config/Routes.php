@@ -3,7 +3,7 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-
+$routes->get('/','EmployeeController::login');
 // Admin dashboard
 $routes->get('admin', 'AdminController::index');
 $routes->post('admin/solde/save', 'AdminController::saveSolde');
