@@ -147,7 +147,7 @@
         </div>
 
         <!-- Informations utilisateur -->
-        <div class="info-section">
+        <div class="info-section" id="profil">
             <h3>
                 <i class="bi bi-person-circle" style="color: var(--forest); margin-right: 8px;"></i>
                 Mes informations

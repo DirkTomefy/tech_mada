@@ -55,7 +55,7 @@
             </li>
 
             <li>
-                <a href="<?= base_url('employee/profil') ?>">
+                <a href="<?= base_url('employee/dashboard#profil') ?>">
                     <i class="bi bi-person"></i>
                     Mon profil
                 </a>
