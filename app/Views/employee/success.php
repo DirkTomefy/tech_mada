@@ -6,18 +6,7 @@
     <title>Connexion réussie - TechMada RH</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/style.css') ?>" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #2d5a3d 0%, #3d7a52 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        .success-container {
-            background: white;
-            border-radius: 16px;
+</head>
             padding: 3rem;
             max-width: 500px;
             width: 100%;
