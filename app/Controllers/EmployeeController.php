@@ -25,7 +25,7 @@ class EmployeeController extends BaseController
             'totalEmployees' => $this->employeeModel->countActive(),
         ];
 
-        return view('employee/index', $data);
+        return view('admin/employee/index', $data);
     }
 
     /**
@@ -33,11 +33,8 @@ class EmployeeController extends BaseController
      */
     public function create()
     {
-        $data = [
-            'title' => 'Ajouter un nouvel employé',
-        ];
-
-        return view('employee/create', $data);
+        // Redirige vers la page unique qui contient le formulaire
+        return redirect()->to('/employes');
     }
 
     /**

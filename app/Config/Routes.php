@@ -9,6 +9,6 @@ $routes->get('login',           'UserController::loginPage');
 $routes->post('login',          'UserController::login');
 $routes->get('logout',          'UserController::logout');
 
-// Employees - Creation only
-$routes->get('employes/create',           'EmployeeController::create');
+// Employees — page unique (formulaire + liste)
+$routes->get('employes',                   'EmployeeController::index');
 $routes->post('employes/save',            'EmployeeController::store');
