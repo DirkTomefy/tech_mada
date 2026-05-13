@@ -112,13 +112,12 @@
   <div class="auth-right">
     <p class="auth-title">Connexion</p>
     <p class="auth-sub">Entrez vos identifiants pour accéder à votre espace.</p>
-
-    <?php if ($error) : ?>
-      <div class="flash flash-error">
-        <i class="bi bi-exclamation-circle-fill"></i>
-        <span><?= $error ?></span>
-      </div>
-    <?php endif; ?>
+<?php if (isset($error)) : ?>
+  <div class="flash flash-error">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <span><?= $error ?></span>
+  </div>
+<?php endif; ?>
 
 
     <!-- Messages d'erreur/succès -->

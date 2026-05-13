@@ -79,7 +79,15 @@ class EmployeeController extends BaseController
                     'logged_in' => true,
                 ]);
 
-                return redirect()->to('employee/dashboard');
+                if ($employe['role'] === 'ADMIN') {
+                    return redirect()->to('/admin');
+                }
+
+                if ($employe['role'] === 'RH') {
+                    return redirect()->to('/rh');
+                }
+
+                return redirect()->to('/employee/dashboard');
             } else {
                 return view('employee/login', [
                     'error' => 'Email ou mot de passe incorrect.',
