@@ -76,9 +76,7 @@ class EmployeeController extends BaseController
                     'logged_in' => true,
                 ]);
 
-                return view('employee/success', [
-                    'employe' => $employe,
-                ]);
+                return redirect()->to('employee/dashboard');
             } else {
                 return view('employee/login', [
                     'error' => 'Email ou mot de passe incorrect.',
@@ -96,6 +94,19 @@ class EmployeeController extends BaseController
     {
         session()->destroy();
         return redirect()->to('/employee/login');
+    }
+
+    /**
+     * Dashboard de l'employé
+     */
+    public function dashboard()
+    {
+        // Vérifier que l'utilisateur est connecté
+        if (!session()->has('logged_in') || !session('logged_in')) {
+            return redirect()->to('employee/login')->with('error', 'Vous devez être connecté');
+        }
+
+        return view('employee/dashboard');
     }
 
     /**
