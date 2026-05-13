@@ -182,38 +182,5 @@ class SoldeModel extends Model
     /**
      * Mettre à jour les jours pris
      */
-    public function updateJoursPris($employe_id, $type_conge_id, $nb_jours, $annee = null)
-    {
-        if ($annee === null) {
-            $annee = date('Y');
-        }
-
-        $solde = $this->getSoldeByType($employe_id, $type_conge_id, $annee);
-
-        if ($solde) {
-            $nouveau_pris = $solde['jours_pris'] + $nb_jours;
-            $this->where('id', $solde['id'])->update(['jours_pris' => $nouveau_pris]);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Calculer les jours restants
-     */
-    public function getJoursRestants($employe_id, $type_conge_id, $annee = null)
-    {
-        if ($annee === null) {
-            $annee = date('Y');
-        }
-
-        $solde = $this->getSoldeByType($employe_id, $type_conge_id, $annee);
-
-        if ($solde) {
-            return $solde['jours_attribues'] - $solde['jours_pris'];
-        }
-
-        return 0;
-    }
+    
 }
